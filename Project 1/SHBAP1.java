@@ -5,39 +5,93 @@ import java.util.*;
 import java.io.*;
 import java.lang.Math.*;
 
+
 class Node {
 	Node next; // the linkage in the singly linked list
 	String key; // the ID of the element
 	long value; // the data stored
 	
 	Node(String ky, long val, Node nxt) { // constructor
-		next = nxt;
 		key = ky;
 		value = val;
+		next = nxt;
 	}
 }
 class LinkedList {
 	Node head;
-	boolean insert(String key, long value) {
-	// do nothing, and return false if key is already present
-	// . . .
-	}
-	boolean delete(String ky) {
-	// return false if key doesn’t exist
-	// . . .
-	}
-	long find(String ky) {
-	// return result of the search
-	// . . .
-	}
+	
 	LinkedList() { // constructor
 		head = null;
 	}
+	
+	boolean insert(String key, long value) {
+		if(find(key) != 0)	//do nothing, and return false if key is already present
+			return false;
+		
+		Node newNode = new Node(key, value, null);
+		
+		newNode.next = head;
+		head = newNode;
+		return true;
+		
+
+	}
+	
+	boolean delete(String ky) {
+		Node current = head;
+		Node prev = null;
+		
+		//if the head of linkedlist is the node that needs to be deleted
+		if(current != null && current.key.equals(ky)){
+			head = current.next;
+			return true;
+		}
+		
+		//parses through linkedlist until key is found
+		while(current != null && !current.key.equals(ky)){
+			prev = current;
+			current = current.next;
+		}
+		
+		//if key does not exist in the linkedlist
+		if(current == null){
+			return false;
+		}
+		
+		//unlinks the prev node and next node from node that is deleted
+		prev.next = current.next;
+		return true;
+	}
+	
+	//linear search of linkedlist
+	long find(String ky) {
+		Node current = head;
+		while(current != null){
+			if(current.key.equals(ky))
+				return current.value;
+			else
+				current = current.next;
+		}
+		return 0; //returns 0 if key does not exist in linkedlist since values in key-value pairs are [1, 2^63-1]
+	} 
+	
+	
+	public String toString(){
+		Node current = head;
+		String key_value = "";
+		
+		while(current != null){
+			key_value += current.key + " " + current.value + "\n";
+			current = current.next;
+		}
+		return key_value;
+	}
 }
-class HashTable {
+/* class HashTable {  
 	LinkedList [] L; // uses an array of (your) LinkedLists
 	int tableSize;
 	int entries;
+	
 	HashTable(int size) { // constructor
 		tableSize = size;
 		entries = 0;
@@ -75,21 +129,32 @@ class HashTable {
 	void printStats() {
 	// . . .
 	}
-} // end of class HashTable
+} // end of class HashTable */
 
 class SHBAP1 { // use a class name according to your name. See Rules for Programming . . .
 	public static void main(String[] args) throws IOException {
 		Scanner sc = new Scanner(new File("P1data.txt"));
 		String s = sc.nextLine();
 		int M = Integer.parseInt(s); // hash table size
-		HashTable HT = new HashTable(M);
+		// HashTable HT = new HashTable(M);
 		s = sc.nextLine();
-		int q = Integer.parseInt(s); // number of command lines
+		int q = Integer.parseInt(s); //number of command lines
 		for(int i=0;i<q;i++) {
 		s = sc.nextLine();
 		String [] tokens = s.split(" ");
 		String command = tokens[0];
-			switch(command) {
+		
+		LinkedList ll = new LinkedList();
+		ll.insert("see ya", 40);
+		ll.insert("hi", 12347);
+		ll.insert("bye", 12345);
+		ll.insert("bye", 4);
+		System.out.println(ll.delete("hi"));
+		System.out.println(ll);
+		
+		// System.out.println(command);
+
+			/*  switch(command) { 
 				case "I": // insert
 				String key = tokens[1];
 				long val = Long.parseLong(tokens[2]);
@@ -107,7 +172,7 @@ class SHBAP1 { // use a class name according to your name. See Rules for Program
 				case "P": // print stats
 				HT.printStats();
 				break;
-			} // end of switch
+			} // end of switch */
 		} // end of for
 	} // end of main
-} // end of class SHBAP1
+} // end of class SHBAP1 
