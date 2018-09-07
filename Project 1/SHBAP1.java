@@ -6,6 +6,7 @@ import java.io.*;
 import java.lang.Math.*;
 
 
+
 class Node {
 	Node next; // the linkage in the singly linked list
 	String key; // the ID of the element
@@ -87,7 +88,7 @@ class LinkedList {
 		return key_value;
 	}
 }
-/* class HashTable {  
+class HashTable {  
 	LinkedList [] L; // uses an array of (your) LinkedLists
 	int tableSize;
 	int entries;
@@ -100,10 +101,21 @@ class LinkedList {
 		L[i] = new LinkedList();
 	}	
 
-	int hash(String ky, int tableSize) {
-	// . . .
+	int remainderUnsigned(int dividend, int divisor){
+		return (dividend & (divisor - 1)); //bitwise division
 	}
-	boolean insert(String key, long val) {
+	
+	int hash(String ky, int tableSize) {
+		int dividend = 0;
+		
+		for(int i = 0; i < ky.length(); i++){
+			dividend += (int)ky.charAt(i) * (int)Math.pow(31, ky.length() - i);
+		}
+		
+		return remainderUnsigned((int)dividend, (int)Math.pow(2,32)) % tableSize;
+	}
+	
+/* 	boolean insert(String key, long val) {
 	// attempt to insert a record. Return false if
 	// the key is already present in the table
 	// . . .
@@ -128,15 +140,15 @@ class LinkedList {
 	}
 	void printStats() {
 	// . . .
-	}
-} // end of class HashTable */
+	} */
+} // end of class HashTable
 
 class SHBAP1 { // use a class name according to your name. See Rules for Programming . . .
 	public static void main(String[] args) throws IOException {
 		Scanner sc = new Scanner(new File("P1data.txt"));
 		String s = sc.nextLine();
 		int M = Integer.parseInt(s); // hash table size
-		// HashTable HT = new HashTable(M);
+		HashTable HT = new HashTable(M);
 		s = sc.nextLine();
 		int q = Integer.parseInt(s); //number of command lines
 		for(int i=0;i<q;i++) {
@@ -150,29 +162,28 @@ class SHBAP1 { // use a class name according to your name. See Rules for Program
 		ll.insert("bye", 12345);
 		ll.insert("bye", 4);
 		System.out.println(ll.delete("hi"));
-		System.out.println(ll);
+		System.out.println(HT.hash("ABCD", 16));
 		
-		// System.out.println(command);
 
-			/*  switch(command) { 
+			 switch(command) { 
 				case "I": // insert
-				String key = tokens[1];
-				long val = Long.parseLong(tokens[2]);
-				// . . .
-				break;
+					String key = tokens[1];
+					long val = Long.parseLong(tokens[2]);
+					break;
+				
 				case "D": // delete
-				4
-				key = tokens[1];
-				// . . .
-				break;
+					
+					key = tokens[1];
+					
+					break;
 				case "S": // search
-				key = tokens[1];
-				// . . .
-				break;
+					key = tokens[1];
+				
+					break;
 				case "P": // print stats
-				HT.printStats();
-				break;
-			} // end of switch */
+					//HT.printStats();
+					break;
+			} // end of switch
 		} // end of for
 	} // end of main
 } // end of class SHBAP1 
