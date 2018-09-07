@@ -21,9 +21,11 @@ class Node {
 }
 class LinkedList {
 	Node head;
+    int listSize;
 	
 	LinkedList() { // constructor
 		head = null;
+        listSize = 0;
 	}
 	
 	boolean insert(String key, long value) {
@@ -34,6 +36,7 @@ class LinkedList {
 		
 		newNode.next = head;
 		head = newNode;
+        listSize++;
 		return true;
 		
 
@@ -62,6 +65,7 @@ class LinkedList {
 		
 		//unlinks the prev node and next node from node that is deleted
 		prev.next = current.next;
+        listSize--;
 		return true;
 	}
 	
@@ -78,7 +82,7 @@ class LinkedList {
 	} 
 	
 	
-	public String toString(){
+	/* public String toString(){
 		Node current = head;
 		String key_value = "";
 		
@@ -87,7 +91,7 @@ class LinkedList {
 			current = current.next;
 		}
 		return key_value;
-	}
+	} */
 }
 class HashTable {  
 	LinkedList [] L; // uses an array of (your) LinkedLists
@@ -102,25 +106,24 @@ class HashTable {
 			L[i] = new LinkedList();
 	}	
 
-	int remainderUnsigned(int dividend, int divisor){
+	/* int remainderUnsigned(int dividend, int divisor){
 		return (dividend & (divisor - 1)); //bitwise division
-	}
+	} */
 	
 	int hash(String ky, int tableSize) {
-		int dividend = 0;
-		
+		long ans= 0;
 		for(int i = 0; i < ky.length(); i++){
-			dividend += (int)ky.charAt(i) * (int)Math.pow(31, ky.length() - i -1);
-		}
+			ans = ans*31 + ky.charAt(i);		//horner's rule on hash function
+		} 
 		
-		return remainderUnsigned((int)dividend, (int)Math.pow(2,32)) % tableSize;
+		return (int)Long.remainderUnsigned(Long.remainderUnsigned(Long.remainderUnsigned(ans, (long)Math.pow(2,32)), (long)Math.pow(2,32)), tableSize);
 	}
 	
 	boolean insert(String ky, long val) {
 		int index = hash(ky, this.tableSize);
 		
 		if(L[index].insert(ky, val)){
-			entries++;	//increments when each record is added
+			entries++;	//increments when each record is added if record with same key does not already exist
 			return true;
         }
 		else
@@ -133,8 +136,11 @@ class HashTable {
 		int index = hash(ky, tableSize);
 		
 		for(int i = 0; i < tableSize; i++){
-			if(L[index].find(ky) != 0) //searches for record with the key we're looking for
+			if(L[index].find(ky) != 0){ //searches for record with the key we're looking for
 				L[index].delete(ky);	//deletes that record
+				entries--;
+				return true;
+			}
 		}
 		return  false;
 	// attempt to delete a record. Return false if
@@ -145,8 +151,8 @@ class HashTable {
 		int index = hash(ky,tableSize);
 		
 		for(int i = 0; i < tableSize; i++){
-			if(L[index].find(ky) != 0)
-				return L[index].find(ky);
+			if(L[index].find(ky) != 0)			//if record does exist
+				return L[index].find(ky);		//returns value of that record with that key
 		}
         return -1;
 	// attempt to find a record. Return the value
@@ -154,10 +160,17 @@ class HashTable {
 	// . . .
 	} 
 	void clearTable() {
-		entries = 0;
+		for(int i = 0; i < tableSize; i++){
+			for(int j = 0; j < L[i].listSize; j++){
+					L[j] = null;
+				}
+			} 
+			entries = 0;
+	}
+		
 	// empty the hash table
 	// . . .
-	}
+	
 	int size() {
 		return entries;
 	// return the number of records in the table
@@ -186,6 +199,7 @@ class SHBAP1 {
 			 switch(command) { 
 				case "I": // insert
 					String key = tokens[1];
+					
 					long val = Long.parseLong(tokens[2]);
 					if(HT.insert(key, val))
 						System.out.println("Key " + key + " inserted on list " + HT.hash(key, M));
@@ -195,10 +209,10 @@ class SHBAP1 {
 				
 				case "D": // delete
 					key = tokens[1];
-					//if(HT.delete(key,val))
+					if(HT.delete(key))
 						System.out.println("Key " + key + " deleted from list " + HT.hash(key, M));
-					//else
-						//System.out.println("Key " + key + " already exists");
+					else
+						System.out.println("Key " + key + " doesn't exist");
 					break;
 				case "S": // search
 					key = tokens[1];
@@ -211,6 +225,7 @@ class SHBAP1 {
 					HT.printStats();
 					break;
 			} // end of switch
+			
 		} // end of for
 	} // end of main
 } // end of class SHBAP1 
