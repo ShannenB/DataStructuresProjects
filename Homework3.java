@@ -1,4 +1,6 @@
-﻿package SHBAP1;
+//Shannen Barrameda
+//CS3345.HON - Dr. Ivor Page
+//Homework 3
 
 class Node {
     private Node next;
@@ -97,28 +99,50 @@ class List { // assume the class does not use a dummy Node
         if(head!=null) {
             if(head.getKey()==ky) // the first Node contains ky
                 head = head.getNext();
-            else {
-                Node x = head;
-                Node prev;
+            else if(exists(ky)){
+//				1a
+//                Node x = head;
+//                
 //                while(x != null && x.getNext() != null) {
-//                    if(x.getNext().getKey() == ky) {//1a
+//                    if(x.getNext().getKey() == ky) {
 //                        Node next = x.getNext();
 //                        x.putNext(next.getNext());
 //                    }
 //                    else
 //                        x = x.getNext();
+//
+//                
+//                }
 
-                
+                Node x = head;
+                    while(x != null) {
+                        if(x.getKey() == ky) {//1b won't always work if node that needs to be deleted is at end of the list since x.getNext().getNext() == null
+                            x.putKey(x.getNext().getKey());                 
+                            x.putNext(x.getNext().getNext());
+                            return;
+                        }
+                    x = x.getNext();
                 }
             } // end of else
         }
-
     }//end of delete
     public void recursiveDelete(int ky) {
         recursiveDelete(ky, head);// calls the private version
     }
     private Node recursiveDelete(int ky, Node n){
+        
+        if(n == null){
+            return null;
+        }
+        
+        if(n.getKey() == ky){
+           return recursiveDelete(ky,n.getNext());
+        }
+        else
+            n.putNext(recursiveDelete(ky,n.getNext()));
+        
         return n;
+        
     }
 
     int maxElement(){ // calls the private version, doesn’t delete the Node
@@ -165,25 +189,3 @@ class List { // assume the class does not use a dummy Node
     }
 }
 
-class Homework2{
-    public static void main(String[] args){
-        List list = new List();
-        
-        list.insertAtHead(2);
-        list.insertAtHead(-1);
-        list.insertAtHead(-40);
-        list.insertAtHead(40);
-        
-        System.out.println(list.toString());
-        
-        list.removeFromHead();
-        list.insertAtHead(1000000);
-        list.insertAtTail(200000000);
-        System.out.println(list.toString());
-//        list.delete(20);
-//        list.delete(2);
-        System.out.println(list.toString());
-        System.out.println("max element: " + list.maxElement() + "sum: " + list.sum() + "length: " +list.length());
-    }
-    
-}
