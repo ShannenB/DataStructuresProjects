@@ -11,17 +11,36 @@ interface TwoThreeTree {
     int height(); // returns the number of links on any path from
     // the root to a leaf
 }
-public class SHBAP2 implements TwoThreeTree{
+
+class Two3Tree implements TwoThreeTree{
     private int height;
     private int numNodes;
     private Node root;
     
+    Two3Tree(){
+        root = null;
+        height = 0;
+        numNodes = 0;
+    }
+    
     @Override
     public boolean search(int key){
-        if(root == null){
-            return false;
+        TreeNode current = (TreeNode) root;
+        
+        while(current != null){
+            int index = 0;
+            
+            while((index < current.getKey() && key > current.keys[index])){
+                index++;
+            }
+            
+            if((index < current.getKey() && key == current.keys[index]))
+                return true;
+            
+            current = (TreeNode)current.getNext();
         }
-        if(
+        
+        return false;
     }
     @Override
     public boolean insert(int key){
@@ -51,7 +70,22 @@ public class SHBAP2 implements TwoThreeTree{
     public int height(){
         return height;
     }
+    
+    public boolean isEmpty(){
+        return numberOfNodes() == 0;
+    }
+
+    @Override
+    public boolean remove(int key) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void keyOrderList() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
+
 class TreeNode extends Node{
     int keys[]; // keys for searching
     Node children[]; // references to the 2 or 3 children
@@ -111,4 +145,6 @@ class LeafNode extends Node{
             return false;
     }
     
+   
 }
+
