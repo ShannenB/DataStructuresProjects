@@ -1,6 +1,4 @@
-﻿package SHBAP1;
-
-class Node {
+﻿class Node{
     private Node next;
     private int key;
     Node(Node nxt, int keyValue){ // constructor
@@ -111,9 +109,7 @@ class List { // assume the class does not use a dummy Node
                 
                 }
             } // end of else
-        }
-
-    }//end of delete
+        }//end of delete
     public void recursiveDelete(int ky) {
         recursiveDelete(ky, head);// calls the private version
     }
