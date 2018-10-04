@@ -109,6 +109,7 @@ class TreeNode extends Node{
 class Node{
     private int key;
     private Node next;
+	private Node prev;
    
     Node(){
         key = -1;  //essentially a null key
@@ -122,6 +123,14 @@ class Node{
         return key;
     }
     
+	public void setPrev(Node prev){
+		this.prev = prev;
+	}
+	
+	public Node getPrev(){
+		return prev;
+	}
+	
     public Node getNext(){
         return next;
     }
