@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 ﻿class Node{
+=======
+//Shannen Barrameda
+//CS3345.HON - Dr. Ivor Page
+//Homework 3
+
+class Node {
+>>>>>>> 217904ef2df5ccde5427e8f8058e98f71d5c0aa6
     private Node next;
     private int key;
     Node(Node nxt, int keyValue){ // constructor
@@ -95,26 +103,54 @@ class List { // assume the class does not use a dummy Node
         if(head!=null) {
             if(head.getKey()==ky) // the first Node contains ky
                 head = head.getNext();
-            else {
-                Node x = head;
-                Node prev;
+            else if(exists(ky)){
+//				1a
+//                Node x = head;
+//                
 //                while(x != null && x.getNext() != null) {
-//                    if(x.getNext().getKey() == ky) {//1a
+//                    if(x.getNext().getKey() == ky) {
 //                        Node next = x.getNext();
 //                        x.putNext(next.getNext());
 //                    }
 //                    else
 //                        x = x.getNext();
+//
+//                
+//                }
 
-                
+                Node x = head;
+                    while(x != null) {
+                        if(x.getKey() == ky) {//1b won't always work if node that needs to be deleted is at end of the list since x.getNext().getNext() == null
+                            x.putKey(x.getNext().getKey());                 
+                            x.putNext(x.getNext().getNext());
+                            return;
+                        }
+                    x = x.getNext();
                 }
             } // end of else
+<<<<<<< HEAD
         }//end of delete
+=======
+        }
+    }//end of delete
+>>>>>>> 217904ef2df5ccde5427e8f8058e98f71d5c0aa6
     public void recursiveDelete(int ky) {
         recursiveDelete(ky, head);// calls the private version
     }
     private Node recursiveDelete(int ky, Node n){
+        
+        if(n == null){
+            return null;
+        }
+        
+        if(n.getKey() == ky){
+           return recursiveDelete(ky,n.getNext());
+        }
+        else
+            n.putNext(recursiveDelete(ky,n.getNext()));
+        
         return n;
+        
     }
 
     int maxElement(){ // calls the private version, doesn’t delete the Node
@@ -161,6 +197,7 @@ class List { // assume the class does not use a dummy Node
     }
 }
 
+<<<<<<< HEAD
 class Homework2{
     public static void main(String[] args){
         List list = new List();
@@ -183,3 +220,5 @@ class Homework2{
     }
     
 }
+=======
+>>>>>>> 217904ef2df5ccde5427e8f8058e98f71d5c0aa6
