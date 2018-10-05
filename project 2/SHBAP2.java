@@ -18,14 +18,16 @@ interface TwoThreeTree {
 class Two3Tree implements TwoThreeTree{
     private int height;
     private int numNodes;
-    private TreeNode root;
+    private TreeNode root = new TreeNode();
     
     Two3Tree(){
         root = null;
         height = 0;
         numNodes = 0;
     }
+	
     
+	
     @Override
     public boolean search(int key){
         TreeNode current = root;
@@ -33,26 +35,22 @@ class Two3Tree implements TwoThreeTree{
         while(current != null){
             int index = 0;
             
-            while((index < current.getKey() && key > current.keys[index])){
+            while((index < current.getDegree()) && (key > current.keys[index])){
                 index++;
             }
-            
-            if((index < current.getKey() && key == current.keys[index]))
-                return true;
-            
-            
+            if((index < current.getDegree() && key == current.keys[index]))
+                return true;    
+            else if(current.getChildren()[0] == null)
+                return false; //if no children exist
+            else if(index < current.getDegree() && key > current.keys[index])
+                current = current.getChildren()[current.getDegree()]; //traverse tree to next child 
+            else
+                current = current.getChildren()[index];
         }
         
         return false;
     }
-    @Override
-    public boolean insert(int key){
-        if(root == null){
-            root.setKey(key);
-            return true;
-        }
-        return false;
-    }
+    
     @Override
     public void bfsList(){
         printInOrder(root);
@@ -85,7 +83,104 @@ class Two3Tree implements TwoThreeTree{
 
     @Override
     public void keyOrderList() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        keyOrderList(root);
+    }
+    void keyOrderList(TreeNode n){
+        if(n != null){
+            for(int ky : n.keys)
+                System.out.print(ky);
+            for(Node child: n.children)
+                keyOrderList((TreeNode)child);
+        }
+    }
+    @Override
+    public boolean insert(int key){
+		return true;
+        // return insert(root, key);
+        
+    }        
+    
+    // boolean insert(Node node, int key){
+        // if(node instanceof LeafNode){
+            // Node leaf = new LeafNode();
+            
+            // leaf.setKey(key);
+            // this.numNodes++;
+            // return node.add(leaf);
+        // }
+        // Node treeNode;
+        // TreeNode current = (TreeNode)node;
+        
+        // if (current.getLeft().getKey() > 0) {  
+            // treeNode = insert(current.getLeftChild(), key);
+            // if (treeNode == current.getLeftChild()) {
+                // return current;
+            // }
+            // else {
+                // return current.add(treeNode);
+            // }
+        // }
+        // else if (current.getRight() == null ||
+                // current.getRight().getKey() > 0) { 
+            // treeNode = insert(current.getMiddleChild(), key);
+            // if (treeNode == current.getMiddleChild()) {
+                // return current;
+            // }
+            // else {     
+                // return current.add(treeNode);
+            // }
+        // }
+        // else {    
+            // treeNode = insert(current.getRightChild(), pair);
+            // if (treeNode == current.getRightChild()) {      
+                // return current;
+            // }
+            // else {         
+                // return current.add(treeNode);
+            // }
+        // }
+    // }
+    int getMin(Node node){
+        if(node == null)
+            return -1;
+        if(node instanceof TreeNode){
+            TreeNode n = (TreeNode) node;
+            while (n.getChildren()[0] != null) {
+                    n = n.getChildren()[0]; //traverses down subtrees for minimum
+            }
+            return n.getKeys()[0];
+        }
+        else{
+            LeafNode n = (LeafNode)node;
+            return n.getKey();
+        }
+        
+    }
+    void split(TreeNode n, int i){
+        TreeNode newN = new TreeNode();
+        
+        newN.getKeys()[0] = n.getChildren()[i].getKeys()[2];
+        newN.getChildren()[0] = n.getChildren()[i].getChildren()[2];
+       
+        n.getChildren()[i].getChildren()[2] = null;
+        
+        
+        newN.setKey(1);
+        n.getChildren()[i].setKey(1);
+        
+        for(int k = n.getDegree() - 1; k >= i; k--){
+            n.getKeys()[k+1] = n.getKeys()[k];
+        }
+        
+        for(int k = n.getDegree() - 1; k > i; k--){
+            n.getChildren()[k+1] = n.getChildren()[k];
+        }
+        
+        n.getChildren()[i+1] = newN;
+        n.getKeys()[i] = n.getChildren()[i].getKeys()[1];
+        n.setKey(n.getDegree() + 1);
+       
+        
     }
 }
 
@@ -99,6 +194,29 @@ class TreeNode extends Node{
             children = new Node[3]; // references to children of leaves
             degree = 0; // for printing, overflow, and split operations
     }
+	
+	int[] getKeys(){
+		return keys;
+	}
+	
+	TreeNode[] getChildren(){
+		return (TreeNode[])children;
+	}
+	
+	int getDegree(){
+		return degree;
+	}
+	
+	void setDegree(int degree){
+		this.degree = degree;
+	}
+	
+	boolean isEmpty(){
+		return keys == null;
+	}
+        
+        
+	
     void print() {
             if(degree == 1)
                     System.out.print("(-,-)");
@@ -111,51 +229,64 @@ class TreeNode extends Node{
 
 class Node{
     private int key;
-    private Node next;
-	private Node prev;
    
     Node(){
-        key = -1;  //essentially a null key
+          
+    }
+	
+    Node(int key){ 
+        this.key = key;
+            
     }
     
-    public void setKey(int key){
+    void setKey(int key){
         this.key = key;
     }
     
-    public int getKey(){
+    int getKey(){
         return key;
     }
     
-	public void setPrev(Node prev){
-		this.prev = prev;
-	}
+	// void setVal(int val){
+		// this.val = val;
+	// }
 	
-	public Node getPrev(){
-		return prev;
-	}
+	// int getVal(){
+		// return val;
+	// }
 	
-    public Node getNext(){
-        return next;
-    }
-    
-    public void setNext(Node next){
-        this.next = next;
-    }
+	void setLeft(Node n){
+		
+	}
 }
 
 class LeafNode extends Node{
-//    private int key;
-    
-    LeafNode(){
-        super();
-    }
 
-    boolean isLeaf(TreeNode node){
-        if(node.children.length == 0)
-            return true;
-        else
-            return false;
+	private LeafNode leftChild, rightChild;
+	
+	LeafNode(){
+		leftChild = null;
+		rightChild = null;
     }
+	
+	void setLeftChild(Node node){
+		leftChild = (LeafNode)node;
+	}
+	
+	void setRightChild(Node node){
+		rightChild = (LeafNode) node;
+	}
+	
+	LeafNode getLeftChild(){
+		return leftChild;
+	}
+	
+	LeafNode getRightChild(){
+		return rightChild;
+	}
+	
+	
+    
     
    
 }
@@ -164,11 +295,11 @@ class SHBAP2{
 		Scanner sc = new Scanner(new File("P2data.txt"));
 		String s = sc.nextLine();
 		Two3Tree tree = new Two3Tree();
-		s = sc.nextLine();
+		
 		
 		
 		while(!s.contains("E")){
-		s = sc.nextLine();
+
 		String [] tokens = s.split(" ");
 		String command = tokens[0];
 		
@@ -177,9 +308,10 @@ class SHBAP2{
                     switch(command) { 
                            case "I": // insert
                                    String key = tokens[1];
-								   
+								 
+								 
                                    if(tree.insert(Integer.parseInt(key)))
-                                           System.out.println("Key " + key + " inserted");
+                                           System.out.println("Key " + key + " inserted" + command);
                                    else
                                            System.out.println("Key " + key + " already exists");
                                    break;
@@ -205,16 +337,16 @@ class SHBAP2{
                                    tree.bfsList();
                                    break;
                            case "H":
-                                   System.out.print("Height " + tree.height());
+                                   System.out.println("Height " + tree.height());
                                    break;
                            case "M":
-                                   System.out.print("Size " + tree.numberOfNodes());
+                                   System.out.println("Size " + tree.numberOfNodes());
                                    break;
                            case "E":
                                    break;
                    } // end of switch
-			
-		}// end of for
+			s = sc.nextLine();
+		}// end of while
 	} // end of main
  } // end of class SHBAP2 
 
