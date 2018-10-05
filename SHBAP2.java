@@ -1,5 +1,8 @@
-package datastructures;
 
+
+import java.util.*;
+import java.io.*;
+import java.lang.Math.*;
 
 interface TwoThreeTree {
     boolean insert(int key); // returns false if the key already exists
@@ -15,7 +18,7 @@ interface TwoThreeTree {
 class Two3Tree implements TwoThreeTree{
     private int height;
     private int numNodes;
-    private Node root;
+    private TreeNode root;
     
     Two3Tree(){
         root = null;
@@ -25,7 +28,7 @@ class Two3Tree implements TwoThreeTree{
     
     @Override
     public boolean search(int key){
-        TreeNode current = (TreeNode) root;
+        TreeNode current = root;
         
         while(current != null){
             int index = 0;
@@ -37,7 +40,7 @@ class Two3Tree implements TwoThreeTree{
             if((index < current.getKey() && key == current.keys[index]))
                 return true;
             
-            current = (TreeNode)current.getNext();
+            
         }
         
         return false;
@@ -156,4 +159,63 @@ class LeafNode extends Node{
     
    
 }
+class SHBAP2{
+    public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(new File("P2data.txt"));
+		String s = sc.nextLine();
+		Two3Tree tree = new Two3Tree();
+		s = sc.nextLine();
+		
+		
+		while(!s.contains("E")){
+		s = sc.nextLine();
+		String [] tokens = s.split(" ");
+		String command = tokens[0];
+		
+		
+
+                    switch(command) { 
+                           case "I": // insert
+                                   String key = tokens[1];
+								   
+                                   if(tree.insert(Integer.parseInt(key)))
+                                           System.out.println("Key " + key + " inserted");
+                                   else
+                                           System.out.println("Key " + key + " already exists");
+                                   break;
+
+                           case "D": // delete
+                                   key = tokens[1];
+                                   if(tree.remove(Integer.parseInt(key)))
+                                           System.out.println("Key " + key + " deleted");
+                                   else
+                                           System.out.println("Key " + key + " doesn't exist");
+                                   break;
+                           case "S": // search
+                                   key = tokens[1];
+                                   if(tree.search(Integer.parseInt(key)))
+                                           System.out.println("Key " + key + " found");
+                                   else
+                                           System.out.println("Key " + key + " doesn't exist");
+                                   break;
+                           case "K": // print keys in order
+                                   tree.keyOrderList();
+                                   break;
+                           case "B": 
+                                   tree.bfsList();
+                                   break;
+                           case "H":
+                                   System.out.print("Height " + tree.height());
+                                   break;
+                           case "M":
+                                   System.out.print("Size " + tree.numberOfNodes());
+                                   break;
+                           case "E":
+                                   break;
+                   } // end of switch
+			
+		}// end of for
+	} // end of main
+ } // end of class SHBAP2 
+
 
