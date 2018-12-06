@@ -1,3 +1,4 @@
+/* CS 3345.HON Shannen Barrameda sib170130 */
 package shbap4;
 import java.util.*; //to use LinkedList and Queue classes
 
@@ -69,8 +70,24 @@ class DWGraph{ //directed, weighted Graph
         }
     }
     
-    void findShortestPaths(){
+
+    void findShortestPath(int source){
+        LinkedList<Integer> queue = new LinkedList(); //LinkedList used to act as queue of vertices
+        int[] distance = new int[v];
         
+        
+        
+            
+        queue.addFirst(source);
+
+        while(queue.peek() != null){
+            int u = queue.poll();
+            queue.pop();
+            
+            for(each )
+            if(!queue.contains(destination))
+                queue.add(destination);
+        }
     }
           
 }
