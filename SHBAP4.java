@@ -1,29 +1,63 @@
 /* CS 3345.HON Shannen Barrameda sib170130 */
-package shbap4;
+/* citations: Algorithms from CS @Princeton */
+package SHBAP4;
 import java.util.*; //to use LinkedList and Queue classes
+import java.io.*;
 
 public class SHBAP4 {
-    public static void main(String[] args){
-        DWGraph graph = new DWGraph(8);
+    public static void main(String[] args) throws FileNotFoundException{
+        Scanner sc = new Scanner(new File("P4d1in.txt"));
+        String s = sc.nextLine();
         
-        graph.addE(1, 2, 2);
-        graph.addE(1, 4, 1);
-        graph.addE(2, 5, 10);
-        graph.addE(2, 4, 3);
-        graph.addE(5, 7, 6);
-        graph.addE(3, 1, 4);
-        graph.addE(6, 3, 5);
-        graph.addE(4, 3, 2);
-        graph.addE(7, 6, 1);
-        graph.addE(4, 5, 2);
-        graph.addE(4, 7, 4);
-        graph.addE(4, 6, 8);
+        DWGraph graph = new DWGraph(Integer.parseInt(s));
+        
+        while(sc.hasNextLine()){
+            s = sc.nextLine();
+            
+            String[] tokens = s.split(" ");
+            
+            graph.addE(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]),
+                    Integer.parseInt(tokens[2]));
+        }
+       
         
         graph.print();
         
     }
 }
-
+class ShortestPath{
+    private double[] distanceTo;
+    private Edge[] edgeTo;
+    private boolean[] onQueue;
+    private Queue<Integer> que;
+    private Iterable<Edge> cycle;
+    
+    ShortestPath(DWGraph graph, int s){
+        int u;
+        distanceTo = new double[graph.v + 1];
+        for(int v = 1; v < graph.v + 1; v++){
+            distanceTo[v] = Double.POSITIVE_INFINITY;
+        }
+        distanceTo[s] = 0;
+        
+        que.add(s);
+        
+        while(que.peek() != null){
+            u = que.poll();
+            
+            for(int i = 0; i < graph.adjList.length; i++){
+                for(Edge edge: graph.adjList[i]){
+                    
+                }
+            }
+        }
+        
+    }
+    
+    
+}
+    
+   
 class Edge{
     int s; //source vertex
     int d; //destination vertex
@@ -45,11 +79,11 @@ class DWGraph{ //directed, weighted Graph
     //constructor creates a LinkedList array of size v 
     DWGraph(int v){ 
         this.v = v;
-        adjList = new LinkedList[v];
+        adjList = new LinkedList[v+1];
         
         /* initialize each LinkedList */
         
-        for(int i = 1; i < v; i++){
+        for(int i = 1; i < v+1; i++){
             adjList[i] = new LinkedList<Edge>();
         }
     }
@@ -63,7 +97,7 @@ class DWGraph{ //directed, weighted Graph
     }
     
     void print(){
-        for(int i = 1; i < v; i++){
+        for(int i = 1; i < v+1; i++){
             for(int j = 0; j < adjList[i].size(); j++){
                 System.out.println(i + " is connected to " + adjList[i].get(j).d + " with weight " + adjList[i].get(j).weight);
             }
@@ -80,14 +114,14 @@ class DWGraph{ //directed, weighted Graph
             
         queue.addFirst(source);
 
-        while(queue.peek() != null){
-            int u = queue.poll();
-            queue.pop();
-            
-            for(each )
-            if(!queue.contains(destination))
-                queue.add(destination);
-        }
+//        while(queue.peek() != null){
+//            int u = queue.poll();
+//            queue.pop();
+//            
+//            for(each )
+//            if(!queue.contains(destination))
+//                queue.add(destination);
+//        }
     }
           
 }
